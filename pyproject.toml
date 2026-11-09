@@ -1,0 +1,36 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "loop-ml"
+version = "0.0.0"
+description = "Synthesizability screening for high-entropy oxides (MLIP structure-aware descriptors)"
+requires-python = ">=3.12,<3.13"
+dependencies = [
+    "numpy",
+    "scikit-learn",
+]
+
+[project.optional-dependencies]
+# MLIP energy layer: MACE relaxers (relax-shard, relax-batch) + TorchSim batching.
+# torch is pulled by mace-torch; PyPI's default torch wheel is the CUDA 12 build.
+# Pinned to the versions the EVAL.md benchmarks were run against.
+mlip = [
+    "mace-torch==0.3.16",
+    "torch-sim-atomistic==0.6.2",
+    "vesin==0.6.2",
+    "vesin-torch==0.6.2",
+    "ase==3.29.0",
+]
+dev = [
+    "pytest",
+]
+
+[tool.setuptools.packages.find]
+include = ["loopml*"]
+
+[tool.uv]
+# uv run scripts/*.py reads PEP 723 inline deps (self-contained); this project
+# extra is for editable installs: uv sync --extra mlip
+package = true
